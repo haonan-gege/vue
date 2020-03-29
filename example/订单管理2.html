@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>订单管理</title>
+	<script type="text/javascript" src="../js/vue.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/order.css">
+</head>
+<body>
+	<div id="app">
+		<div class="div-title">
+			<h2><p class="title-wold">订单管理</p></h2> 
+		</div>
+		<div class="div-01">
+			<span> 品牌：</span>
+			<input type="text" v-model="select" class="select" placeholder="请输入名称" ></input>
+			<button type="button"  class="btn-select" @click="search">查询</button>
+		</div>
+		<hr class="hr-01">
+		<div class="div-main">
+			<div class="main-left">
+				<table class="gridtable" style="font-size: 14px;text-align: center;">
+						<tr>
+							<th> <h2>品牌</h2> </th>
+							<th><h2>订单日期</h2></th>
+							<th><h2>订单价格</h2></th>
+							<th><h2>购买数量</h2></th>
+							<th><h2>操作</h2></th>	
+						</tr>
+					    <tr v-for="(item,index) in lists">
+						    <td>{{item.name}}</td>
+						    <td>{{item.time}}</td>
+							<td>{{item.price}}</td>
+						    <td>
+							<input type="button" value="-" @click="sub(index)">
+							<span >{{item.number}}</span>
+							<input type="button" value="+" @click="ad(index)">
+						    </td>
+						    <td>
+							 <button @click="remove(index)">删除</button>
+							</td>
+					    </tr>
+					        <td style="font-size: 15px; ">
+						       <span >订单总额:</span><span v-model="all"></span>{{all}}</span>
+				            </td>
+				</table>	
+			</div>
+			<div class="main-right">
+				<h2>新增订单</h2>
+				<span >品牌：</span>
+				<input type="text" class="select" v-model="name" placeholder="例如三星,小米" />
+				<br>
+				<span >价格：</span>
+				<input style="margin-top: 10px;" type="text" class="select" v-model="price" placeholder="1-9999" />
+				<br>
+				<span>数量：</span>
+				<input style="margin-top: 10px;" type="text" class="select" v-model="number" placeholder="1-10" />
+				<br>
+				<button  class="btn-select" @click="add">提交</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				list: {
+					name: '',
+					time: '',
+					price: '',
+					number: '',
+				},
+				lists: [ ],
+				all:0,
+			},
+			methods: {
+				ad: function(index) {
+					this.lists[index].number++;
+					var sum = this.lists[index].price * this.lists[index].number;
+				   this.all+= sum;
+				},
+				sub: function(index) {
+					this.lists[index].number--;
+					var sum = this.lists[index].price * this.lists[index].number;
+				   this.all-= sum;
+				},
+				add: function() {
+					var date = new Date();
+					var sep = "-";
+					var year = date.getFullYear();
+					var month = date.getMonth() + 1;
+					var strDate = date.getDate();
+					if (month >= 1 && month <= 9) {
+						month = "0" + month;
+					}
+					if (strDate >= 0 && strDate <= 9) {
+						strDate = "0" + strDate;
+					}
+					var current= year + sep + month + sep + strDate + - +date.getHours() + ":" + date.getMinutes();
+					this.lists.push({
+						name: this.name,
+						time: current,
+						price: this.price,
+						number: this.number,
+					})
+					var sum = this.lists[index].price * this.lists[index].number;
+				    this.all = sum;
+					
+				},
+				remove: function(index) {
+					this.lists.splice(index, 1);
+				},
+				search: function() {
+					var list;
+					for (let i = 0; i < this.lists.length; i++) {
+						if ((this.lists[i].name == this.select) && this.select != -1) {
+							list = this.lists[i];
+							this.lists.splice(0, this.lists.length);
+							this.lists.push(list);
+						}
+					}
+				},
+			}
+		})
+	</script>
+</body>
+</html>
+		
+
+		
